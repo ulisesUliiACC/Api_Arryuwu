@@ -77,5 +77,12 @@ class AuthController extends Controller
             'success' => false,
             'message' => 'Credenciales incorrectas. El correo electrónico o la contraseña no coinciden.',
         ], 401);
+
+
     }
+public function users(){
+    $users = User::all();
+
+    return response()->json(['users' => $users], 200);
+}
 }
