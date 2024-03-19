@@ -77,8 +77,15 @@ class AuthController extends Controller
             'success' => false,
             'message' => 'Credenciales incorrectas. El correo electrónico o la contraseña no coinciden.',
         ], 401);
+    }
+    public function logout(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->user()->tokens()->delete();
 
-
+        return response()->json([
+            'success' => true,
+            'message' => 'Has cerrado sesión exitosamente.',
+        ]);
     }
 public function users(){
     $users = User::all();
