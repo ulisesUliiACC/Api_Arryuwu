@@ -48,14 +48,15 @@ class AuthController extends Controller
     public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()->messages(),
+                'message' => 'Por favor, proporciona un correo electrónico y contraseña válidos.',
+                'errors' => $validator->errors()->all()
             ], 422);
         }
 
@@ -80,6 +81,7 @@ class AuthController extends Controller
             ], 401);
         }
     }
+
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->user()->tokens()->delete();
