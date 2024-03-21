@@ -59,7 +59,9 @@ class AuthController extends Controller
             ], 422);
         }
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
 
@@ -71,12 +73,12 @@ class AuthController extends Controller
                     'message' => 'Acceso concedido.',
                 ],
             ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Credenciales incorrectas. El correo electrónico o la contraseña no coinciden.',
+            ], 401);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Credenciales incorrectas. El correo electrónico o la contraseña no coinciden.',
-        ], 401);
     }
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -89,7 +91,6 @@ class AuthController extends Controller
     }
 public function users(){
     $users = User::all();
-
     return response()->json(['users' => $users], 200);
 }
 }
