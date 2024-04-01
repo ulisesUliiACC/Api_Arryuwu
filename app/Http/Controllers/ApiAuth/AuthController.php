@@ -70,7 +70,9 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                     'user' => $user,
-                    'token' => $token,
+                    'access_token' => $token, // Cambiado de 'token' a 'access_token' para mayor claridad
+                    'token_type' => 'Bearer', // Agregado el tipo de token
+                    'expires_in' => $user->tokens()->first()->expires_at->diffInSeconds(now()), // Calcula la duración del token
                     'message' => 'Acceso concedido.',
                 ],
             ], 200);
@@ -83,6 +85,7 @@ class AuthController extends Controller
     }
 
 
+
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->user()->tokens()->delete();
@@ -92,7 +95,8 @@ class AuthController extends Controller
             'message' => 'Has cerrado sesión exitosamente.',
         ]);
     }
-public function users(){
+public function users(): \Illuminate\Http\JsonResponse
+{
     $users = User::all();
     return response()->json(['users' => $users], 200);
 }
